@@ -1,0 +1,29 @@
+<launch>
+  <param command="$(find xacro)/xacro $(find tsbenzbot_description)/urdf/tsbenzbot.xacro" name="robot_description"/>
+  <node args="-param robot_description -urdf -model tsbenzbot" name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find tsbenzbot_description)/world/mymap3.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+
+  </include>
+  <arg default="$(find tsbenzbot_description)/urdf/tsbenzbot.xacro" name="model"/>
+  <arg default="true" name="gui"/>
+  <arg default="$(find tsbenzbot_description)/launch/urdf.rviz" name="rvizconfig"/>
+  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/>
+  
+  <param name="use_sim_time" value="true" />
+  <node pkg="gmapping" type="slam_gmapping" name="gmapping_thing" output="screen" >
+  <remap from="scan" to="/scan" />
+  <remap from="base_link" to="/base_link" />
+  <remap from="odom" to="/odom" />
+  </node>
+  
+</launch>

@@ -1,0 +1,46 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find tsbenzbot_description)/map/map3/map3.yaml"/>
+
+  <!-- Simulation Setup Start -->
+  <!-- Run Gazebo -->
+  <param command="$(find xacro)/xacro $(find tsbenzbot_description)/urdf/tsbenzbot.xacro" name="robot_description"/>
+  <node args="-param robot_description -urdf -model tsbenzbot" name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find tsbenzbot_description)/world/mymap3.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Run rvis -->
+  <arg default="$(find tsbenzbot_description)/urdf/tsbenzbot.xacro" name="model"/>
+  <arg default="true" name="gui"/>
+  <arg default="$(find tsbenzbot_description)/launch/urdf.rviz" name="rvizconfig"/>
+  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/>
+
+  <!-- Navigation Section -->
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- AMCL -->
+  <node pkg="amcl" type="amcl" name="amcl">
+    <param name="min_particles"    value="200"/>
+    <param name="max_particles"    value="1000"/>
+    <param name="odom_model_type"  value="diff"/>
+  </node>
+
+  <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find tsbenzbot_description)/param/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find tsbenzbot_description)/param/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find tsbenzbot_description)/param/local_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find tsbenzbot_description)/param/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find tsbenzbot_description)/param/base_local_planner_params.yaml" command="load"/>
+    <rosparam file="$(find tsbenzbot_description)/param/move_base_params.yaml" command="load"/>
+  </node>
+</launch>

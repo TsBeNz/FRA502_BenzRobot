@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<robot name="tsbenzbot" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<material name="silver">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+
+<material name="black">
+  <color rgba="0.0 0.0 0.0 1.000"/>
+</material>
+
+<material name="aqua">
+  <color rgba="0.0 1 1 0.70"/>
+</material>
+
+<material name="lime">
+  <color rgba="0.0 1 0.0 0.70"/>
+</material>
+
+</robot>

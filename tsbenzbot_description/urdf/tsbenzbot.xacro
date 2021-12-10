@@ -1,0 +1,135 @@
+<?xml version="1.0" ?>
+<robot name="tsbenzbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find tsbenzbot_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find tsbenzbot_description)/urdf/tsbenzbot.trans" />
+<xacro:include filename="$(find tsbenzbot_description)/urdf/tsbenzbot.gazebo" />
+
+<!-- <link name="dummy"/>
+<joint name="dummy_joint" type="fixed">
+<parent link="dummy"/>
+<child link="base_link"/>
+</joint> -->
+
+<link name="base_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.0004048792431578201 0.0 0.05061342669444969"/>
+    <mass value="4.266982945407815"/>
+    <inertia ixx="0.016096" ixy="-0.0" ixz="-0.000195" iyy="0.019904" iyz="0.0" izz="0.033237"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="lime"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="r_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-7.237528875152536e-18 -0.009999999999999995 -1.3877787807814457e-17"/>
+    <mass value="1.2330751165339937"/>
+    <inertia ixx="0.000812" ixy="0.0" ixz="-0.0" iyy="0.001541" iyz="0.0" izz="0.000812"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0.0 0.11 -0.05"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/r_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0.0 0.11 -0.05"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/r_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="l_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-7.237528875152536e-18 0.009999999999999995 -1.3877787807814457e-17"/>
+    <mass value="1.2330751165339937"/>
+    <inertia ixx="0.000812" ixy="0.0" ixz="-0.0" iyy="0.001541" iyz="-0.0" izz="0.000812"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.0 -0.11 -0.05"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/l_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.0 -0.11 -0.05"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/l_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="lidar_1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-6.938893903907228e-18 -5.38241998862892e-18 0.009454633195977669"/>
+    <mass value="0.4145169264011764"/>
+    <inertia ixx="0.000101" ixy="-0.0" ixz="-0.0" iyy="0.000101" iyz="-0.0" izz="0.000177"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="-0.06 -0.0 -0.09"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/lidar_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>	
+    <material name="aqua"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="-0.06 -0.0 -0.09"/>
+    <geometry>
+      <mesh filename="package://tsbenzbot_description/meshes/lidar_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+
+<gazebo reference="base_link">
+<material>Gazebo/Green</material>
+</gazebo>
+
+<gazebo reference="l_1">
+<material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="r_1">
+<material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="lidar_1">
+<material>Gazebo/SkyBlue</material>
+</gazebo>
+
+<joint name="Rev1" type="continuous">
+  <origin rpy="0 0 0" xyz="0.0 -0.11 0.05"/>
+  <parent link="base_link"/>
+  <child link="r_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Rev2" type="continuous">
+  <origin rpy="0 0 0" xyz="0.0 0.11 0.05"/>
+  <parent link="base_link"/>
+  <child link="l_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Rigid3" type="fixed">
+  <origin rpy="0 0 0" xyz="0.06 0.0 0.09"/>
+  <parent link="base_link"/>
+  <child link="lidar_1"/>
+</joint>
+
+</robot>
